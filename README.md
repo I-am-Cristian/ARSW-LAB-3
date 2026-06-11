@@ -95,3 +95,74 @@ Error salon no existe y Operacion invalida
     | **Servidor (métodos handler)** | Formato específico | `if (parts.length < 2) return "ERROR: Formato inválido. Use GET_ROOM:id";` |
     | **Cliente (líneas 23-26)** | Mapeo de comandos | `if (input.equalsIgnoreCase("list")) input = "LIST_ROOMS";` |
     | **Cliente (mensajes de ayuda)** | Documentación para usuario | `System.out.println("1. Consultar salón (GET_ROOM:id)");` |
+
+
+
+### Gestión de Salones vía HTTP
+
+### Descripcion
+
+Transforme el ejercicio de gestión de salones para que funcione mediante HTTP. No es necesario construir una interfaz gráfica; puede probar con navegador, curl o Postman.
+
+### URL
+Desde el navegador:
+
+Listar todos los salones: http://localhost:8080/rooms<br>
+Ver detalle de un salón: http://localhost:8080/rooms?id=E303
+
+### Pruebas De Rutas Requeridas
+
+Ejecutamos
+![alt text](rooms-http/resources/image.png)
+
+Entramos a la URL
+![alt text](rooms-http/resources/image-1.png)
+
+Reservamos Damos clic en reservar 
+![alt text](rooms-http/resources/image-3.png)
+![alt text](rooms-http/resources/image-2.png)
+
+Dejamos libre clic en liberar
+![alt text](rooms-http/resources/image-5.png)
+![alt text](rooms-http/resources/image-4.png)
+
+Ver un salon en especifico Disponible y No Disponible 
+![alt text](rooms-http/resources/image-6.png) 
+![alt text](rooms-http/resources/image-7.png)
+
+### Pruebas Postman
+
+Ver lista de salones
+![alt text](rooms-http/resources/image-8.png)
+
+Ver detalles de algun salon
+![alt text](rooms-http/resources/image-9.png)
+
+Reservar un salon
+![alt text](rooms-http/resources/image-10.png)
+
+Liberar un salon
+![alt text](rooms-http/resources/image-11.png)
+
+### Preguntas de reflexión
+
+- ¿Qué ventajas ofrece HTTP frente a un protocolo de texto definido manualmente?
+
+    Estandarización universal<br>
+    Soporte nativo en navegadores<br>
+    Caché, autenticación y compresión ya resueltos<br>
+    Herramientas existentes (`curl`, Postman, navegador)
+
+- ¿Qué limitaciones tiene construir un servidor HTTP sin framework?
+
+    Manejo manual de rutas, parámetros, headers<br>
+    Sin soporte para HTTPS, sesiones, formularios complejos<br>
+    Mayor código boilerplate<br>
+    Vulnerabilidades de seguridad potenciales
+
+- ¿Cómo cambiaría esta solución si se usara JSON en lugar de HTML?
+
+    Mejor para APIs REST<br>
+    Clientes más ligeros (aplicaciones móviles, SPA)<br>
+    Fácil integración con frameworks frontend
+
