@@ -234,4 +234,24 @@ Diseñe e implemente un servicio gRPC para gestionar solicitudes de citas de bie
 ### Pruebas
 
 Servidor
-![alt text](image.png)
+![alt text](wellness-grpc/resources/image.png)
+
+Cliente
+![alt text](wellness-grpc/resources/image-1.png)
+
+Solicitar Cita
+![alt text](wellness-grpc/resources/image-2.png)
+
+Consultar Cita
+![alt text](wellness-grpc/resources/image-3.png)
+
+Cancelar Cita
+![alt text](wellness-grpc/resources/image-4.png)
+
+Consultar Citas Canceladas
+
+![alt text](wellness-grpc/resources/image-5.png)
+
+Salir
+![alt text](wellness-grpc/resources/image-6.png)
+
