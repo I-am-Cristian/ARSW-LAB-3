@@ -166,3 +166,72 @@ Liberar un salon
     Clientes más ligeros (aplicaciones móviles, SPA)<br>
     Fácil integración con frameworks frontend
 
+### Inventario de Laboratorios
+
+### Descripcion
+
+Implemente un sistema RMI para consultar y reservar equipos de laboratorio. El objetivo es diseñar una interfaz remota coherente y no depender de protocolos textuales.
+
+### Pruebas de Datos mínimos
+
+Corremos el server
+![alt text](laboratory-rmi/resources/image.png)
+
+Corremos el cliente
+![alt text](laboratory-rmi/resources/image-1.png)
+
+Listamos todos los equipos
+![alt text](laboratory-rmi/resources/image-2.png)
+
+Consultamos el equipo por el codigo
+![alt text](laboratory-rmi/resources/image-3.png)
+
+Reservamos un equipo
+![alt text](laboratory-rmi/resources/image-4.png)
+
+Liberamos el equipo
+![alt text](laboratory-rmi/resources/image-5.png)
+
+Salimos 
+![alt text](laboratory-rmi/resources/image-6.png)
+
+### Preguntas de reflexión
+- ¿Qué cambió al pasar de HTTP a RMI?
+
+    En HTTP teníamos que parsear URLs y parámetros manualmente<br>
+    En RMI invocamos métodos directamente como si estuvieran locales<br>
+    RMI oculta toda la complejidad de serialización y transporte
+
+- ¿Dónde está definido el contrato de comunicación?
+
+    En la interfaz LaboratoryService que extiende Remote<br>
+    Cada método debe declarar throws RemoteException
+
+- ¿Qué problemas tendría este sistema si un cliente no está escrito en Java?
+
+    RMI es específico de Java (uso de Remote, UnicastRemoteObject)<br>
+    La serialización Java no es interoperable<br>
+    No se podría consumir desde Python, JavaScript, etc.
+
+### Sistema de Bienestar Universitario con gRPC
+
+### Descripcion
+
+Diseñe e implemente un servicio gRPC para gestionar solicitudes de citas de bienestar universitario. Este ejercicio evalúa la capacidad de modelar contratos y no solamente de modificar nombres de clases.
+
+### Entidades mínimas
+- Student: id, name, institutionalEmail.
+- Appointment: id, studentId, serviceType, date, status.
+- ServiceType: MEDICINE, PSYCHOLOGY, DENTISTRY.
+- Status: REQUESTED, CANCELLED, ATTENDED.
+
+### Reglas
+- Una cita solicitada debe quedar en estado REQUESTED.
+- Una cita cancelada no debe aparecer como activa.
+- El sistema debe permitir consultar las citas de un estudiante.
+- La información se debe mantener en memoria.
+
+### Pruebas
+
+Servidor
+![alt text](image.png)
