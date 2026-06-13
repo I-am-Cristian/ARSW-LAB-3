@@ -355,3 +355,91 @@ Pruebas de todos los microservicios
 Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médica
 
 ![alt text](wellness-microservices/resources/image-12.png)
+
+### Preguntas de reflexión
+- ¿Por qué decidió separar esos servicios y no otros?
+
+    La decisión de separar los servicios en AppointmentService, MedicalService, GymService y RecreationService se basó en los siguientes criterios:
+
+    Criterio de Responsabilidad Única (Single Responsibility)<br>
+    AppointmentService: Gestiona el ciclo de vida completo de las citas (solicitud, cancelación, consulta). Es el núcleo del negocio de bienestar.
+
+    MedicalService: Maneja información estática y de referencia (especialidades, doctores). No cambia con frecuencia.
+
+    GymService: Administra recursos con capacidad limitada y reglas de reserva específicas (aforo máximo, horarios).
+
+    RecreationService: Gestiona inventario de recursos físicos prestables con reglas de devolución.
+
+    Criterio de Frecuencia de Cambio<br>
+    Los servicios médicos cambian por nuevas especialidades o doctores (baja frecuencia)
+
+    Las citas cambian constantemente (alta frecuencia)
+
+    El inventario recreativo cambia por préstamos y devoluciones (frecuencia media)
+
+    Criterio de Escalabilidad<br> 
+    AppointmentService necesitará más réplicas en horas pico (inicio de semestre)
+
+    GymService requiere control estricto de concurrencia por capacidad limitada
+
+    MedicalService es mayormente consulta, puede tener muchas réplicas
+
+    ¿Por qué no separar más?<br>
+    Podría haberse separado AppointmentService en dos (Citas Médicas, Psicológicas, Odontológicas), pero compartirían la misma lógica de agendamiento. La separación actual es suficiente
+
+- ¿Qué datos pertenecen a cada servicio?
+
+    AppointmentService (Responsabilidad: Gestión de citas)
+
+    Datos propios:
+    ├── appointments (Map<String, AppointmentInfo>)
+    │   ├── id, studentId, studentName
+    │   ├── serviceType (MEDICINE, PSYCHOLOGY, DENTISTRY)
+    │   ├── scheduledDate, status
+    │   └── creationTimestamp
+    ├── studentAppointments (Map<String, List<String>>)
+    └── availableSlots (Map<ServiceType, List<String>>)
+
+    MedicalService (Responsabilidad: Información médica)
+
+    Datos propios:
+    ├── specialties (Map<String, SpecialtyInfo>)
+    │   ├── name, description
+    │   ├── availableDoctors
+    │   └── commonTreatments
+    └── doctorsBySpecialty (Map<String, List<DoctorInfo>>)
+        ├── doctorId, name, specialty
+        ├── schedule, available
+
+    GymService (Responsabilidad: Reservas de gimnasio)
+
+    Datos propios:
+    ├── reservations (Map<String, GymReservationInfo>)
+    │   ├── id, studentId, studentName
+    │   ├── timeSlot, sessionType
+    │   └── status
+    ├── sessionCapacity (Map<String, Integer>)
+    ├── currentOccupancy (Map<String, Integer>)
+    └── studentReservations (Map<String, List<String>>)
+
+    RecreationService (Responsabilidad: Préstamo recreativo)
+
+    Datos propios:
+    ├── reservations (Map<String, ResourceReservationInfo>)
+    │   ├── id, studentId, studentName
+    │   ├── resourceId, resourceType
+    │   ├── reservedAt, returnDeadline
+    │   └── status
+    ├── availableResources (Map<String, Integer>)
+    └── studentReservations (Map<String, List<String>>)
+
+
+- ¿Qué riesgo aparece cuando el cliente conoce todos los servicios?
+
+    | Riesgo | Descripción |
+    |---------|-------------|
+    | Acoplamiento fuerte | El cliente debe conocer 4 puertos, 4 IPs y 4 contratos. |
+    | Fallo en cascada | Si un servicio falla, la funcionalidad asociada deja de estar disponible. |
+    | Latencia acumulada | El cliente realiza 4 llamadas separadas, aumentando el tiempo total de respuesta. |
+    | Dificultad de evolución | Modificar un servicio puede requerir actualizar todos los clientes. |
+
