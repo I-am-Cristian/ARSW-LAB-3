@@ -261,3 +261,97 @@ Salir
 
 ![alt text](wellness-grpc/resources/image-6.png)
 
+### Preguntas de reflexión
+
+- ¿Por qué el archivo .proto se considera un contrato?
+
+    Define de forma estricta y agnóstica al lenguaje las operaciones, tipos de datos, formatos de mensaje y reglas de serialización. Cambiar el .proto implica un cambio contractual.
+
+- ¿Qué tan fácil sería crear un cliente en otro lenguaje?
+
+    Muy fácil: solo se necesita el mismo .proto y usar el generador de código para Python, Go, C#, etc. La comunicación es independiente del lenguaje del servidor.
+
+- ¿Qué diferencias encuentra entre RMI y gRPC?
+
+    | Característica | RMI | gRPC |
+    |---------------|-----|------|
+    | Lenguajes | Solo Java | Multi-lenguaje |
+    | Contrato | Interfaz Java | Archivo `.proto` |
+    | Serialización | Java Serialization | Protocol Buffers |
+    | Streaming | Limitado | Bidireccional, server streaming y client streaming |
+    | HTTP/2 | No | Sí |
+
+### Descomposición de Bienestar Universitario
+
+### Descripcion
+
+A partir del ejercicio gRPC de citas de bienestar, proponga e implemente una descomposición inicial en microservicios. La solución debe priorizar claridad arquitectónica, no cantidad de líneas de código.
+
+### Producto esperado
+- Diagrama de microservicios.
+- Descripción de la responsabilidad de cada servicio.
+- Al menos dos servicios implementados y ejecutándose en puertos distintos.
+- Cliente que consuma directamente los servicios implementados.
+
+### Prender los microservicios
+
+Appointment Service (Puerto 50051)<br>
+mvn -pl appointment-service exec:java "-Dexec.mainClass=edu.eci.arsw.wellness.appointment.AppointmentServer"
+
+Medical Service (Puerto 50052)<br>
+mvn -pl medical-service exec:java "-Dexec.mainClass=edu.eci.arsw.wellness.medical.MedicalServer"
+
+Gym Service (Puerto 50053)<br>
+mvn -pl gym-service exec:java "-Dexec.mainClass=edu.eci.arsw.wellness.gym.GymServer"
+
+Recreation Service (Puerto 50054)<br>
+mvn -pl recreation-service exec:java "-Dexec.mainClass=edu.eci.arsw.wellness.recreation.RecreationServer"
+
+Wellness Client<br>
+mvn -pl wellness-client exec:java "-Dexec.mainClass=edu.eci.arsw.wellness.client.WellnessClient"
+
+### Pruebas
+
+Prendemos todos los servicios 
+
+- Gestionar citas médicas, psicológicas y odontológicas
+![alt text](wellness-microservices/resources/image.png)
+
+- Información de especialidades médicas y doctores disponibles
+![alt text](wellness-microservices/resources/image-1.png)
+
+- Gestionar reservas de sesiones de gimnasio
+![alt text](wellness-microservices/resources/image-2.png)
+
+- Gestionar préstamo de recursos recreativos
+![alt text](wellness-microservices/resources/image-3.png)
+
+- Cliente
+![alt text](wellness-microservices/resources/image-4.png)
+
+Pruebas de todos los microservicios
+
+- Solicitud cita medica
+![alt text](wellness-microservices/resources/image-5.png)
+
+- Ver especialidades médicas
+![alt text](wellness-microservices/resources/image-6.png)
+
+- Reservar sesión de gimnasio
+![alt text](wellness-microservices/resources/image-7.png)
+
+- Reservar recurso recreativo
+![alt text](wellness-microservices/resources/image-8.png)
+
+- Ver mis citas
+![alt text](wellness-microservices/resources/image-9.png)
+
+- Ver mis reservas de gimnasio
+![alt text](wellness-microservices/resources/image-10.png)
+
+- Ver mis recursos recreativos
+![alt text](wellness-microservices/resources/image-11.png)
+
+Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médica
+
+![alt text](wellness-microservices/resources/image-12.png)

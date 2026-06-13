@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package wellness.recreation;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.wellness.proto.recreation";
+option java_outer_classname = "RecreationProto";
+
+service RecreationService {
+    rpc ReserveResource (ResourceReservationRequest) returns (ResourceReservationResponse);
+    rpc ReturnResource (ReturnResourceRequest) returns (ReturnResourceResponse);
+    rpc GetStudentReservations (StudentRecreationRequest) returns (ResourceReservationList);
+    rpc GetAvailableResources (EmptyRecreationRequest) returns (AvailableResourcesResponse);
+}
+
+message EmptyRecreationRequest {}
+
+message ResourceReservationRequest {
+    string student_id = 1;
+    string student_name = 2;
+    string resource_id = 3;
+    string resource_type = 4; // BOARD_GAME, SPORTS_EQUIPMENT, MUSICAL_INSTRUMENT
+    int32 duration_hours = 5;
+}
+
+message ResourceReservationResponse {
+    bool success = 1;
+    string reservation_id = 2;
+    string message = 3;
+    string return_deadline = 4;
+}
+
+message ReturnResourceRequest {
+    string reservation_id = 1;
+    string student_id = 2;
+}
+
+message ReturnResourceResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message StudentRecreationRequest {
+    string student_id = 1;
+}
+
+message ResourceReservationInfo {
+    string id = 1;
+    string student_id = 2;
+    string student_name = 3;
+    string resource_id = 4;
+    string resource_type = 5;
+    string reserved_at = 6;
+    string return_deadline = 7;
+    string status = 8;
+}
+
+message ResourceReservationList {
+    repeated ResourceReservationInfo reservations = 1;
+}
+
+message AvailableResourcesResponse {
+    map<string, int32> available_resources = 1;
+    repeated string resources_by_type = 2;
+}
