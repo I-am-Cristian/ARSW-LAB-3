@@ -357,6 +357,7 @@ Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médic
 ![alt text](wellness-microservices/resources/image-12.png)
 
 ### Preguntas de reflexión
+
 - ¿Por qué decidió separar esos servicios y no otros?
 
     La decisión de separar los servicios en AppointmentService, MedicalService, GymService y RecreationService se basó en los siguientes criterios:
@@ -443,3 +444,8 @@ Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médic
     | Latencia acumulada | El cliente realiza 4 llamadas separadas, aumentando el tiempo total de respuesta. |
     | Dificultad de evolución | Modificar un servicio puede requerir actualizar todos los clientes. |
 
+### Diagrama
+
+![alt text](wellness-microservices/resources/Diagrama.png)
+
+![alt text](wellness-microservices/resources/DiagramaC4.png)

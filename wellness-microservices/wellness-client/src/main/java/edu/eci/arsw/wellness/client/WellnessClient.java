@@ -79,7 +79,7 @@ public class WellnessClient {
         
         System.out.println("\n=== ESPECIALIDADES MÉDICAS ===");
         for (SpecialtyInfo specialty : specialties.getSpecialtiesList()) {
-            System.out.println("\n📋 " + specialty.getName());
+            System.out.println("\n" + specialty.getName());
             System.out.println("   Descripción: " + specialty.getDescription());
             System.out.println("   Doctores disponibles: " + specialty.getAvailableDoctors());
             System.out.println("   Tratamientos: " + String.join(", ", specialty.getCommonTreatmentsList()));
@@ -97,11 +97,11 @@ public class WellnessClient {
         GymReservationResponse response = gymStub.reserveGymSession(request);
         
         if (response.getSuccess()) {
-            System.out.println("\n✓ Reserva de gimnasio confirmada!");
+            System.out.println("\n Reserva de gimnasio confirmada!");
             System.out.println("  ID Reserva: " + response.getReservationId());
             System.out.println("  Horario: " + response.getConfirmedSlot());
         } else {
-            System.out.println("\n✗ Error: " + response.getMessage());
+            System.out.println("\n Error: " + response.getMessage());
         }
     }
     
@@ -117,11 +117,11 @@ public class WellnessClient {
         ResourceReservationResponse response = recreationStub.reserveResource(request);
         
         if (response.getSuccess()) {
-            System.out.println("\n✓ Recurso recreativo reservado!");
+            System.out.println("\n Recurso recreativo reservado!");
             System.out.println("  ID Reserva: " + response.getReservationId());
             System.out.println("  Devolver antes de: " + response.getReturnDeadline());
         } else {
-            System.out.println("\n✗ Error: " + response.getMessage());
+            System.out.println("\n Error: " + response.getMessage());
         }
     }
     
@@ -137,7 +137,7 @@ public class WellnessClient {
             System.out.println("No tiene citas agendadas");
         } else {
             for (AppointmentInfo appt : appointments.getAppointmentsList()) {
-                System.out.println("\n📅 Cita ID: " + appt.getId());
+                System.out.println("\n Cita ID: " + appt.getId());
                 System.out.println("   Servicio: " + appt.getServiceType());
                 System.out.println("   Fecha: " + appt.getScheduledDate());
                 System.out.println("   Estado: " + appt.getStatus());
@@ -157,7 +157,7 @@ public class WellnessClient {
             System.out.println("No tiene reservas de gimnasio");
         } else {
             for (GymReservationInfo res : reservations.getReservationsList()) {
-                System.out.println("\n🏋️ Reserva ID: " + res.getId());
+                System.out.println("\n Reserva ID: " + res.getId());
                 System.out.println("   Tipo: " + res.getSessionType());
                 System.out.println("   Horario: " + res.getTimeSlot());
                 System.out.println("   Estado: " + res.getStatus());
@@ -177,7 +177,7 @@ public class WellnessClient {
             System.out.println("No tiene recursos recreativos reservados");
         } else {
             for (ResourceReservationInfo res : reservations.getReservationsList()) {
-                System.out.println("\n🎮 Reserva ID: " + res.getId());
+                System.out.println("\n Reserva ID: " + res.getId());
                 System.out.println("   Recurso: " + res.getResourceId());
                 System.out.println("   Tipo: " + res.getResourceType());
                 System.out.println("   Devolver antes: " + res.getReturnDeadline());
@@ -190,7 +190,7 @@ public class WellnessClient {
         WellnessClient client = new WellnessClient();
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("\n🏥 BIENVENIDO AL SISTEMA DE BIENESTAR UNIVERSITARIO 🏥");
+        System.out.println("\n BIENVENIDO AL SISTEMA DE BIENESTAR UNIVERSITARIO ");
         System.out.print("\nIngrese su ID de estudiante: ");
         String studentId = scanner.nextLine();
         System.out.print("Ingrese su nombre: ");
