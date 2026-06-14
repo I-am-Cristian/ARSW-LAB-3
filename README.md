@@ -392,46 +392,46 @@ Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médic
 
     AppointmentService (Responsabilidad: Gestión de citas)
 
-    Datos propios:
-    ├── appointments (Map<String, AppointmentInfo>)
-    │   ├── id, studentId, studentName
-    │   ├── serviceType (MEDICINE, PSYCHOLOGY, DENTISTRY)
-    │   ├── scheduledDate, status
-    │   └── creationTimestamp
-    ├── studentAppointments (Map<String, List<String>>)
+    Datos propios:<br> 
+    ├── appointments (Map<String, AppointmentInfo>)<br> 
+    │   ├── id, studentId, studentName<br> 
+    │   ├── serviceType (MEDICINE, PSYCHOLOGY, DENTISTRY)<br> 
+    │   ├── scheduledDate, status<br> 
+    │   └── creationTimestamp<br> 
+    ├── studentAppointments (Map<String, List<String>>)<br> 
     └── availableSlots (Map<ServiceType, List<String>>)
 
     MedicalService (Responsabilidad: Información médica)
 
-    Datos propios:
-    ├── specialties (Map<String, SpecialtyInfo>)
-    │   ├── name, description
-    │   ├── availableDoctors
-    │   └── commonTreatments
-    └── doctorsBySpecialty (Map<String, List<DoctorInfo>>)
-        ├── doctorId, name, specialty
+    Datos propios:<br> 
+    ├── specialties (Map<String, SpecialtyInfo>)<br> 
+    │   ├── name, description<br> 
+    │   ├── availableDoctors<br> 
+    │   └── commonTreatments<br> 
+    └── doctorsBySpecialty (Map<String, List<DoctorInfo>>)<br> 
+        ├── doctorId, name, specialty<br> 
         ├── schedule, available
 
     GymService (Responsabilidad: Reservas de gimnasio)
 
-    Datos propios:
-    ├── reservations (Map<String, GymReservationInfo>)
-    │   ├── id, studentId, studentName
-    │   ├── timeSlot, sessionType
-    │   └── status
-    ├── sessionCapacity (Map<String, Integer>)
-    ├── currentOccupancy (Map<String, Integer>)
+    Datos propios:<br> 
+    ├── reservations (Map<String, GymReservationInfo>)<br> 
+    │   ├── id, studentId, studentName<br> 
+    │   ├── timeSlot, sessionType<br> 
+    │   └── status<br> 
+    ├── sessionCapacity (Map<String, Integer>)<br> 
+    ├── currentOccupancy (Map<String, Integer>)<br> 
     └── studentReservations (Map<String, List<String>>)
 
     RecreationService (Responsabilidad: Préstamo recreativo)
 
-    Datos propios:
-    ├── reservations (Map<String, ResourceReservationInfo>)
-    │   ├── id, studentId, studentName
-    │   ├── resourceId, resourceType
-    │   ├── reservedAt, returnDeadline
-    │   └── status
-    ├── availableResources (Map<String, Integer>)
+    Datos propios:<br> 
+    ├── reservations (Map<String, ResourceReservationInfo>)<br> 
+    │   ├── id, studentId, studentName<br> 
+    │   ├── resourceId, resourceType<br> 
+    │   ├── reservedAt, returnDeadline<br> 
+    │   └── status<br> 
+    ├── availableResources (Map<String, Integer>)<br> 
     └── studentReservations (Map<String, List<String>>)
 
 
@@ -449,3 +449,132 @@ Prueba cuando apagamos algun microservicio en este caso el Solicitar cita médic
 ![alt text](wellness-microservices/resources/Diagrama.png)
 
 ![alt text](wellness-microservices/resources/DiagramaC4.png)
+
+### WellnessGateway
+
+### Descripcion
+
+Construya un Gateway para centralizar el acceso a los servicios del sistema de bienestar universitario
+
+### Servicios internos
+- AppointmentService
+- MedicalService
+- GymService
+- RecreationService
+
+### Prendemos todo.
+
+Compilar todo el proyecto (desde la raíz wellness-platform)
+
+mvn clean compile
+
+Appointment Service (Puerto 50051)
+
+mvn exec:java -pl appointment-service "-Dexec.mainClass=edu.eci.arsw.wellness.appointment.AppointmentServer"
+
+Medical Service (Puerto 50052)
+
+mvn exec:java -pl medical-service "-Dexec.mainClass=edu.eci.arsw.wellness.medical.MedicalServer"
+
+Gym Service (Puerto 50053)
+
+mvn exec:java -pl gym-service "-Dexec.mainClass=edu.eci.arsw.wellness.gym.GymServer"
+
+Recreation Service (Puerto 50054)
+
+mvn exec:java -pl recreation-service "-Dexec.mainClass=edu.eci.arsw.wellness.recreation.RecreationServer"
+
+API Gateway (Interfaz unificada)
+
+mvn exec:java -pl wellness-gateway "-Dexec.mainClass=edu.eci.arsw.wellness.gateway.GatewayConsole"
+
+### Pruebas
+
+Prendemos todos los microservicios y el apigatwey
+
+Gestionar citas médicas, psicológicas y odontológicas
+![alt text](wellness-platform/resources/image.png)
+
+Información de especialidades médicas
+![alt text](wellness-platform/resources/image-1.png)
+
+Servicio de Gimnasio
+![alt text](wellness-platform/resources/image-2.png)
+
+Servicio de Recreación
+![alt text](wellness-platform/resources/image-3.png)
+
+ApiGateway
+![alt text](wellness-platform/resources/image-4.png)
+
+Pruebas de todos los servicios:
+
+1. Solicitar cita médica
+    ![alt text](wellness-platform/resources/image-6.png)
+
+2. Ver resumen de bienestar
+    ![alt text](wellness-platform/resources/image-7.png)
+
+3. Reservar sesión de gimnasio
+    ![alt text](wellness-platform/resources/image-8.png)
+
+4. Reservar recurso recreativo
+    ![alt text](wellness-platform/resources/image-9.png)
+
+5. Ver servicios disponibles
+    ![alt text](wellness-platform/resources/image-10.png)
+
+6. Cancelar cita médica
+    ![alt text](wellness-platform/resources/image-11.png)
+
+7. Ver mis actividades
+    ![alt text](wellness-platform/resources/image-12.png)
+
+8. Apagamos un microservicio "Solicitar cita médica"
+    ![alt text](wellness-platform/resources/image-13.png)
+
+
+### Preguntas de reflexión
+- ¿Qué simplifica el Gateway para el cliente?
+
+    Punto único de entrada: El cliente solo necesita conocer la dirección del Gateway
+
+    Abstracción de complejidad: No sabe cuántos servicios existen ni en qué puertos
+
+    Interfaz unificada: Todas las operaciones usan el mismo estilo de llamada
+
+    Simplificación de errores: El Gateway puede manejar fallos de servicios internos
+
+    Reducción de código: El cliente no necesita implementar lógica de comunicación con múltiples servicios
+
+- ¿Qué complejidad agrega al sistema?
+
+    Punto adicional: Se debe desarrollar, desplegar y mantener el Gateway
+
+    Latencia extra: Cada petición pasa por una capa adicional
+
+    Posible cuello de botella: Todo el tráfico pasa por el Gateway
+
+    Configuración adicional: Se deben configurar las conexiones a los servicios internos
+
+    Single Point of Failure (SPOF): Si el Gateway falla, todo el sistema falla
+
+- ¿Qué pasaría si el Gateway empieza a contener demasiada lógica de negocio?
+
+    Gateway anémico -> Gateway "inteligente": Si contiene mucha lógica, se convierte en un monolito distribuido
+
+    Problemas identificados:
+
+    Acoplamiento fuerte: El Gateway se vuelve dependiente de las reglas de negocio
+
+    Dificultad de escalar: La lógica compleja requiere más recursos
+
+    Mantenimiento complejo: Cambios en reglas de negocio requieren cambios en el Gateway
+
+    Responsabilidades mezcladas: El Gateway debería ser solo de enrutamiento, no de procesamiento
+
+***Mejor práctica***: El Gateway debe ser "tonto" (routing y transformación mínima) y la lógica de negocio debe estar en los microservicios
+
+### Diagrama
+
+![alt text](wellness-platform/resources/Diagrama.png)
