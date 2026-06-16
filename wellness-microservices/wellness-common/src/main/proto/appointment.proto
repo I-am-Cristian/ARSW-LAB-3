@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package wellness.appointment;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.wellness.proto.appointment";
+option java_outer_classname = "AppointmentProto";
+
+service AppointmentService {
+    rpc RequestAppointment (AppointmentRequest) returns (AppointmentResponse);
+    rpc CancelAppointment (CancelRequest) returns (CancelResponse);
+    rpc GetAppointments (StudentRequest) returns (AppointmentList);
+    rpc GetAvailableSlots (ServiceTypeRequest) returns (AvailableSlotsResponse);
+}
+
+enum ServiceTypeProto {
+    MEDICINE = 0;
+    PSYCHOLOGY = 1;
+    DENTISTRY = 2;
+}
+
+enum AppointmentStatusProto {
+    REQUESTED = 0;
+    CANCELLED = 1;
+    ATTENDED = 2;
+}
+
+message AppointmentRequest {
+    string student_id = 1;
+    string student_name = 2;
+    string student_email = 3;
+    ServiceTypeProto service_type = 4;
+    string preferred_date = 5;
+}
+
+message AppointmentResponse {
+    bool success = 1;
+    string appointment_id = 2;
+    string message = 3;
+    string scheduled_date = 4;
+    AppointmentStatusProto status = 5;
+}
+
+message CancelRequest {
+    string appointment_id = 1;
+    string student_id = 2;
+}
+
+message CancelResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message StudentRequest {
+    string student_id = 1;
+}
+
+message AppointmentInfo {
+    string id = 1;
+    string student_id = 2;
+    string student_name = 3;
+    ServiceTypeProto service_type = 4;
+    string scheduled_date = 5;
+    AppointmentStatusProto status = 6;
+}
+
+message AppointmentList {
+    repeated AppointmentInfo appointments = 1;
+}
+
+message ServiceTypeRequest {
+    ServiceTypeProto service_type = 1;
+}
+
+message AvailableSlotsResponse {
+    repeated string available_dates = 1;
+}

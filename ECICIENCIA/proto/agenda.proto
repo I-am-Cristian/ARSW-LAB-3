@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package eciciencia.agenda;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.eciciencia.proto.agenda";
+option java_outer_classname = "AgendaProto";
+
+service AgendaService {
+    rpc GetSchedule (EmptyRequest) returns (ActivityList);
+    rpc GetActivitiesByTimeSlot (TimeSlotRequest) returns (ActivityList);
+    rpc GetActivityDetails (ActivityRequest) returns (ActivityInfo);
+    rpc GetActivitiesByCategory (CategoryRequest) returns (ActivityList);
+    rpc SearchActivities (SearchRequest) returns (ActivityList);
+}
+
+enum ActivityType {
+    TALK = 0;
+    WORKSHOP = 1;
+    PANEL = 2;
+    EXPERIENCE = 3;
+    KEYNOTE = 4;
+}
+
+message TimeSlotRequest {
+    string start_time = 1;  // Formato: "2024-06-15T09:00:00"
+    string end_time = 2;
+}
+
+message ActivityRequest {
+    string activity_id = 1;
+}
+
+message CategoryRequest {
+    string category = 1;  // "AI", "Software", "Hardware", "Innovación", etc.
+}
+
+message SearchRequest {
+    string keyword = 1;
+    optional ActivityType type = 2;
+}
+
+message ActivityInfo {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    ActivityType type = 4;
+    string start_time = 5;
+    string end_time = 6;
+    string location = 7;
+    string speaker = 8;
+    string category = 9;
+    int32 max_capacity = 10;
+    int32 current_registrations = 11;
+    bool is_full = 12;
+    repeated string prerequisites = 13;
+}
+
+message ActivityList {
+    repeated ActivityInfo activities = 1;
+    int32 total_count = 2;
+}
+
+message EmptyRequest {}

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package wellness.medical;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.wellness.proto.medical";
+
+service MedicalService {
+    rpc GetSpecialties (EmptyRequest) returns (SpecialtyList);
+    rpc GetSpecialtyInfo (SpecialtyRequest) returns (SpecialtyInfo);
+    rpc GetAvailableDoctors (SpecialtyRequest) returns (DoctorList);
+}
+
+message EmptyRequest {}
+
+message SpecialtyRequest {
+    string specialty_name = 1;
+}
+
+message SpecialtyInfo {
+    string name = 1;
+    string description = 2;
+    int32 available_doctors = 3;
+    repeated string common_treatments = 4;
+}
+
+message SpecialtyList {
+    repeated SpecialtyInfo specialties = 1;
+}
+
+message DoctorInfo {
+    string id = 1;
+    string name = 2;
+    string specialty = 3;
+    string schedule = 4;
+    bool available = 5;
+}
+
+message DoctorList {
+    repeated DoctorInfo doctors = 1;
+}

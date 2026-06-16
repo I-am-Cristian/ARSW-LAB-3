@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.wellness";
+option java_outer_classname = "WellnessProto";
+
+service AppointmentService {
+    // Solicitar una nueva cita
+    rpc RequestAppointment (AppointmentRequest) returns (AppointmentResponse);
+    
+    // Cancelar una cita existente
+    rpc CancelAppointment (CancelRequest) returns (CancelResponse);
+    
+    // Consultar todas las citas de un estudiante
+    rpc GetAppointments (StudentRequest) returns (AppointmentList);
+}
+
+// ========== Mensajes para RequestAppointment ==========
+message AppointmentRequest {
+    string student_id = 1;
+    string student_name = 2;
+    string student_email = 3;
+    ServiceType service_type = 4;
+    string preferred_date = 5;  // Formato: YYYY-MM-DD
+}
+
+message AppointmentResponse {
+    bool success = 1;
+    string message = 2;
+    Appointment appointment = 3;
+}
+
+// ========== Mensajes para CancelAppointment ==========
+message CancelRequest {
+    string appointment_id = 1;
+    string student_id = 2;  // Verificar que la cita pertenece al estudiante
+}
+
+message CancelResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// ========== Mensajes para GetAppointments ==========
+message StudentRequest {
+    string student_id = 1;
+}
+
+message AppointmentList {
+    repeated Appointment appointments = 1;
+}
+
+// ========== Entidades principales ==========
+message Appointment {
+    string id = 1;
+    string student_id = 2;
+    string student_name = 3;
+    ServiceType service_type = 4;
+    string date = 5;
+    AppointmentStatus status = 6;
+    string created_at = 7;
+}
+
+// ========== Enumeraciones ==========
+enum ServiceType {
+    MEDICINE = 0;
+    PSYCHOLOGY = 1;
+    DENTISTRY = 2;
+}
+
+enum AppointmentStatus {
+    REQUESTED = 0;
+    CANCELLED = 1;
+    ATTENDED = 2;
+}

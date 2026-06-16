@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package eciciencia.capacity;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.eciciencia.proto.capacity";
+option java_outer_classname = "CapacityProto";
+
+service CapacityService {
+    rpc GetActivityCapacity (CapacityRequest) returns (CapacityInfo);
+    rpc ReserveSpot (SpotReservationRequest) returns (SpotResponse);
+    rpc ReleaseSpot (SpotReleaseRequest) returns (SpotResponse);
+    rpc GetGlobalMetrics (EmptyRequest) returns (GlobalMetrics);
+    rpc GetWaitlist (CapacityRequest) returns (WaitlistResponse);
+}
+
+message CapacityRequest {
+    string activity_id = 1;
+}
+
+message CapacityInfo {
+    string activity_id = 1;
+    int32 total_capacity = 2;
+    int32 reserved_spots = 3;
+    int32 available_spots = 4;
+    int32 waitlist_count = 5;
+    double occupancy_rate = 6;
+}
+
+message SpotReservationRequest {
+    string activity_id = 1;
+    string attendee_id = 2;
+    string reservation_id = 3;
+}
+
+message SpotReleaseRequest {
+    string activity_id = 1;
+    string attendee_id = 2;
+    string reservation_id = 3;
+}
+
+message SpotResponse {
+    bool success = 1;
+    string message = 2;
+    int32 spot_number = 3;
+}
+
+message GlobalMetrics {
+    int32 total_activities = 1;
+    int32 total_capacity = 2;
+    int32 total_reservations = 3;
+    double global_occupancy = 4;
+    repeated string popular_activities = 5;
+}
+
+message WaitlistResponse {
+    repeated string attendees_in_waitlist = 1;
+    int32 position = 2;
+}
+
+message EmptyRequest {}
