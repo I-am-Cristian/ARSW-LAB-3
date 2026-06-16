@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package eciciencia.workshop;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.eciciencia.proto.workshop";
+option java_outer_classname = "WorkshopProto";
+
+service WorkshopService {
+    rpc ReserveWorkshop (ReservationRequest) returns (ReservationResponse);
+    rpc CancelReservation (CancelRequest) returns (CancelResponse);
+    rpc GetAttendeeReservations (AttendeeReservationsRequest) returns (ReservationList);
+    rpc GetWorkshopRegistrations (WorkshopRequest) returns (AttendeeList);
+    rpc CheckAvailability (WorkshopRequest) returns (AvailabilityResponse);
+}
+
+enum ReservationStatus {
+    PENDING = 0;
+    CONFIRMED = 1;
+    CANCELLED = 2;
+    ATTENDED = 3;
+    WAITLIST = 4;
+}
+
+message ReservationRequest {
+    string attendee_id = 1;
+    string activity_id = 2;
+    string reservation_date = 3;
+}
+
+message ReservationResponse {
+    bool success = 1;
+    string message = 2;
+    string reservation_id = 3;
+    ReservationStatus status = 4;
+    int32 position_in_waitlist = 5;
+}
+
+message CancelRequest {
+    string reservation_id = 1;
+    string attendee_id = 2;
+}
+
+message CancelResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message AttendeeReservationsRequest {
+    string attendee_id = 1;
+}
+
+message WorkshopRequest {
+    string activity_id = 1;
+}
+
+message AvailabilityResponse {
+    bool available = 1;
+    int32 available_spots = 2;
+    int32 total_capacity = 3;
+    int32 waitlist_size = 4;
+}
+
+message AttendeeInfo {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string institution = 4;
+}
+
+message AttendeeList {
+    repeated AttendeeInfo attendees = 1;
+    int32 count = 2;
+}
+
+message ReservationInfo {
+    string id = 1;
+    string attendee_id = 2;
+    string attendee_name = 3;
+    string activity_id = 4;
+    string activity_title = 5;
+    string reservation_date = 6;
+    ReservationStatus status = 7;
+}
+
+message ReservationList {
+    repeated ReservationInfo reservations = 1;
+}

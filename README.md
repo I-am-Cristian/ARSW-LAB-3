@@ -578,3 +578,126 @@ Pruebas de todos los servicios:
 ### Diagrama
 
 ![alt text](wellness-platform/resources/Diagrama.png)
+
+
+### Plataforma ECICIENCIA
+
+### Descripcion
+Como cierre del taller, los estudiantes deben diseñar la arquitectura de una plataforma distribuida para
+apoyar la gestión del evento ECICIENCIA. Este ejercicio no exige implementar todo el sistema, pero sí
+requiere justificar decisiones arquitectónicas usando los estilos trabajados durante el taller.
+
+### Contexto
+La Escuela necesita una plataforma para organizar actividades académicas, talleres, charlas y experiencias tecnológicas durante ECICIENCIA. El sistema debe permitir registrar asistentes, consultar la agenda, reservar talleres y controlar el aforo de cada actividad.
+
+### Funcionalidades mínimas
+
+- Registro de asistentes.
+- Consulta de agenda.
+- Reserva de cupos en talleres.
+- Control de aforo por actividad.
+- Consulta de actividades por franja horaria.
+
+### Actividades del ejercicio
+
+- Identifique los microservicios necesarios.
+- Defina la responsabilidad de cada microservicio.
+- Proponga los contratos gRPC principales.
+- Diseñe un API Gateway para centralizar el acceso.
+- Elabore un diagrama de arquitectura.
+- Justifique por qué no usaría un único servicio monolítico para todo.
+
+### Diagrama Arquitectónico
+
+![alt text](ECICIENCIA/resources/Diagrama.jpg)
+
+### Lista de Microservicios y Responsabilidades
+
+| Servicio | Puerto | Responsabilidad | Datos que gestiona |
+|-----------|---------|----------------|-------------------|
+| Registry Service | 50051 | Gestión completa de asistentes (CRUD) | ID, nombre, email, institución, rol, fecha de registro |
+| Agenda Service | 50052 | Catálogo de actividades, horarios y ubicaciones | ID de actividad, título, tipo, horario, ubicación, ponente, categoría |
+| Workshop Service | 50053 | Reservas de talleres y gestión de participantes | ID de reserva, actividad, asistente, estado, fecha de reserva |
+| Capacity Service | 50054 | Control de aforo y disponibilidad | Capacidad total, ocupados y disponibles por actividad |
+| Notification Service | 50055 | Comunicaciones con asistentes | Email, tipo de notificación, estado de envío y registros (logs) |
+| Report Service | 50056 | Analítica y generación de reportes | Estadísticas, métricas y exportaciones |
+
+### Descripción del ApiGateway
+
+*** Responsabilidades: ***
+
+1. Ruteo de Solicitudes: Dirige cada petición al microservicio correspondiente
+2. Agregación de Respuestas: Combina datos de múltiples servicios (ej: agenda + capacidad)
+3. Autenticación Simple: Valida sesiones y tokens
+4. Rate Limiting: Controla el número de peticiones por cliente
+5. Logging Centralizado: Registra todas las operaciones
+6. Transformación de Protocolos: Convierte HTTP REST a gRPC interno
+
+*** Endpoints Expuestos: ***
+
+| Método | Endpoint | Función | Servicios Internos |
+|---------|----------|----------|-------------------|
+| POST | `/api/register` | Registrar asistente | Registry, Notification |
+| GET | `/api/agenda` | Consultar agenda | Agenda, Capacity |
+| POST | `/api/reserve` | Reservar taller | Workshop, Capacity, Registry, Agenda, Notification |
+| GET | `/api/my-reservations` | Ver reservas del asistente | Workshop, Agenda |
+| GET | `/api/capacity` | Consultar aforo y disponibilidad | Capacity |
+| GET | `/api/dashboard` | Consultar estadísticas globales | Registry, Agenda, Capacity |
+
+### ¿Por qué no usar un monolito?
+
+![alt text](ECICIENCIA/resources/Monolito.jpg)
+
+PROBLEMAS:
+- Un cambio en registro requiere redeploy completo
+- Pico de reservas afecta todo el sistema  
+- Equipos trabajan sobre el mismo código base
+- Escalamiento horizontal de todo o nada
+- Fallo en notificaciones colapsa registros
+
+Ventajas de la arquitectura propuesta
+
+| Aspecto | Monolito | Microservicios |
+|----------|----------|----------------|
+| Escalabilidad | Escala toda la aplicación conjuntamente | Escala únicamente los servicios con mayor demanda (por ejemplo, Workshop y Capacity) |
+| Disponibilidad | Un fallo puede afectar toda la aplicación | Los fallos se aíslan por servicio (por ejemplo, Notification no bloquea registros) |
+| Despliegue | Requiere redeploy completo de la aplicación | Permite despliegue independiente de cada servicio |
+| Mantenimiento | Alto acoplamiento entre componentes | Bajo acoplamiento y responsabilidades bien definidas |
+| Equipos | Todos trabajan sobre el mismo repositorio y código base | Equipos especializados pueden trabajar por dominio o servicio |
+| Tecnología | Limitada a una única pila tecnológica | Posibilidad de elegir la tecnología más adecuada para cada servicio |
+
+### evolución arquitectónica del talle
+
+Evolución a lo largo del taller:
+
+```text
+Sockets TCP              HTTP                    RMI
+Manual protocol      Interoperabilidad      RPC en Java
+Alto acoplamiento    Formato estándar       Contrato interfaz
+       ↓                    ↓                     ↓
+      gRPC           Microservicios         API Gateway
+Contrato formal      Responsabilidades      Punto único
+Multi-lenguaje       Escalabilidad          Centralización
+```
+
+Lecciones aprendidas:
+- Cada estilo resuelve problemas específicos
+- La complejidad se mueve: Gateway simplifica cliente pero añade punto de orquestación
+- El contrato es clave: gRPC y Protocol Buffers formalizan la comunicación
+- Escalar requiere desacoplar: Microservicios permiten escalar partes específicas
+
+¿Cuándo usar cada estilo?
+
+| Escenario | Estilo recomendado |
+|------------|--------------------|
+| Prototipo rápido | HTTP + JSON |
+| Sistema interno Java | RMI |
+| Sistema crítico con múltiples clientes | gRPC |
+| Sistema grande con dominios claros | Microservicios |
+| Exposición externa | API Gateway |
+
+### Conclusión
+
+La evolución desde sockets TCP hasta microservicios con API Gateway. Representa el camino natural de maduración de sistemas distribuidos, donde cada capa de abstracción resuelve problemas de la anterior, pero introduce nuevas complejidades que deben gestionarse. Entender estos trade-offs para tomar decisiones informadas según el contexto específico.
+
+El caso ECICIENCIA demuestra que una plataforma con alta concurrencia (inscripciones), necesidades de notificación, control de aforo estricto y múltiples tipos de actividades se beneficia enormemente de una arquitectura de microservicios, donde cada componente puede escalar, evolucionar y fallar independientemente, mientras el Gateway unifica la experiencia para el usuario final.

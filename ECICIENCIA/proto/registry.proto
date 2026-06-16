@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package eciciencia.registry;
+
+option java_multiple_files = true;
+option java_package = "edu.eci.arsw.eciciencia.proto.registry";
+option java_outer_classname = "RegistryProto";
+
+service RegistryService {
+    rpc RegisterAttendee (RegisterRequest) returns (AttendeeResponse);
+    rpc GetAttendee (GetAttendeeRequest) returns (AttendeeInfo);
+    rpc UpdateAttendee (UpdateAttendeeRequest) returns (AttendeeResponse);
+    rpc ListAttendees (EmptyRequest) returns (AttendeeList);
+    rpc GetAttendeeByEmail (EmailRequest) returns (AttendeeInfo);
+}
+
+enum AttendeeRole {
+    STUDENT = 0;
+    PROFESSOR = 1;
+    RESEARCHER = 2;
+    PROFESSIONAL = 3;
+}
+
+message RegisterRequest {
+    string name = 1;
+    string email = 2;
+    string institution = 3;
+    AttendeeRole role = 4;
+    string phone = 5;
+}
+
+message AttendeeInfo {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string institution = 4;
+    AttendeeRole role = 5;
+    string phone = 6;
+    string registration_date = 7;
+    bool is_verified = 8;
+}
+
+message AttendeeResponse {
+    bool success = 1;
+    string message = 2;
+    AttendeeInfo attendee = 3;
+}
+
+message GetAttendeeRequest {
+    string attendee_id = 1;
+}
+
+message EmailRequest {
+    string email = 1;
+}
+
+message UpdateAttendeeRequest {
+    string attendee_id = 1;
+    optional string name = 2;
+    optional string institution = 3;
+    optional string phone = 4;
+}
+
+message EmptyRequest {}
+
+message AttendeeList {
+    repeated AttendeeInfo attendees = 1;
+}
